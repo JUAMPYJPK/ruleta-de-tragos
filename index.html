@@ -49,10 +49,11 @@ h1 { margin-bottom: 20px; }
   position: absolute;
   top: 50%;
   left: 50%;
-  transform-origin: left center;
+  width: 110px;
+  text-align: center;
   font-size: 14px;
   font-weight: bold;
-  white-space: nowrap;
+  transform-origin: center left;
   pointer-events: none;
 }
 
@@ -125,16 +126,16 @@ const total = opciones.length;
 const angulo = 360 / total;
 let rotacionActual = 0;
 
-// Crear textos dentro de la ruleta
+// Crear etiquetas RADIALES (de afuera hacia el centro)
 opciones.forEach((op, i) => {
   const label = document.createElement("div");
   label.className = "label";
 
-  const rot = i * angulo + angulo / 2;
+  const rotacion = i * angulo + angulo / 2;
+
   label.style.transform = `
-    rotate(${rot}deg)
-    translate(130px)
-    rotate(90deg)
+    rotate(${rotacion}deg)
+    translate(-170px)
   `;
 
   label.innerText = op.texto;
@@ -164,4 +165,3 @@ function girar() {
 
 </body>
 </html>
-
