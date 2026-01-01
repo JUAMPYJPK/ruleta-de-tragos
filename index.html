@@ -22,8 +22,8 @@ h1 { margin-bottom: 20px; }
 
 .ruleta-container {
   position: relative;
-  width: 360px;
-  height: 360px;
+  width: 380px;
+  height: 380px;
 }
 
 .ruleta {
@@ -32,42 +32,40 @@ h1 { margin-bottom: 20px; }
   height: 100%;
   border-radius: 50%;
   border: 6px solid white;
-  transition: transform 7s cubic-bezier(0.1, 0.7, 0.1, 1);
-  overflow: hidden;
+  transition: transform 7s cubic-bezier(0.12, 0.8, 0.15, 1);
+  background: conic-gradient(
+    #ffeb3b 0deg 45deg,
+    #ff9800 45deg 90deg,
+    #ffc107 90deg 135deg,
+    #f44336 135deg 180deg,
+    #4caf50 180deg 225deg,
+    #ff9800 225deg 270deg,
+    #c62828 270deg 315deg,
+    #66bb6a 315deg 360deg
+  );
 }
 
-.sector {
+.label {
   position: absolute;
-  width: 50%;
-  height: 50%;
   top: 50%;
   left: 50%;
-  transform-origin: 0% 0%;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-}
-
-.sector span {
-  position: absolute;
-  width: 140px;
-  top: 60%;
-  left: 15%;
   transform-origin: left center;
   font-size: 14px;
   font-weight: bold;
-  text-align: left;
+  white-space: nowrap;
   pointer-events: none;
 }
 
 .flecha {
   position: absolute;
-  top: -20px;
+  top: -22px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 25px solid white;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-bottom: 26px solid white;
 }
 
 button {
@@ -111,14 +109,14 @@ button {
 
 <script>
 const opciones = [
-  { texto: "Shot bebida blanca 🥃", gravedad: "media", color: "#ffeb3b" },
-  { texto: "Trago a elección 🍹", gravedad: "media", color: "#ff9800" },
-  { texto: "Vodka 🧊", gravedad: "media", color: "#ffc107" },
-  { texto: "Fondo blanco 😵", gravedad: "alta", color: "#f44336" },
-  { texto: "Pasa el turno 😎", gravedad: "suave", color: "#4caf50" },
-  { texto: "Toma izquierda 👈", gravedad: "media", color: "#ff9800" },
-  { texto: "Doble shot 💀", gravedad: "alta", color: "#c62828" },
-  { texto: "Elige alguien 🍻", gravedad: "suave", color: "#66bb6a" }
+  { texto: "Shot bebida blanca 🥃", gravedad: "media" },
+  { texto: "Trago a elección 🍹", gravedad: "media" },
+  { texto: "Vodka 🧊", gravedad: "media" },
+  { texto: "Fondo blanco 😵", gravedad: "alta" },
+  { texto: "Pasa el turno 😎", gravedad: "suave" },
+  { texto: "Toma izquierda 👈", gravedad: "media" },
+  { texto: "Doble shot 💀", gravedad: "alta" },
+  { texto: "Elige alguien 🍻", gravedad: "suave" }
 ];
 
 const ruleta = document.getElementById("ruleta");
@@ -127,19 +125,20 @@ const total = opciones.length;
 const angulo = 360 / total;
 let rotacionActual = 0;
 
-// Crear sectores visibles con texto
+// Crear textos dentro de la ruleta
 opciones.forEach((op, i) => {
-  const sector = document.createElement("div");
-  sector.className = "sector";
-  sector.style.transform = `rotate(${i * angulo}deg)`;
-  sector.style.background = op.color;
+  const label = document.createElement("div");
+  label.className = "label";
 
-  const texto = document.createElement("span");
-  texto.innerText = op.texto;
-  texto.style.transform = `rotate(${angulo / 2}deg)`;
+  const rot = i * angulo + angulo / 2;
+  label.style.transform = `
+    rotate(${rot}deg)
+    translate(130px)
+    rotate(90deg)
+  `;
 
-  sector.appendChild(texto);
-  ruleta.appendChild(sector);
+  label.innerText = op.texto;
+  ruleta.appendChild(label);
 });
 
 function girar() {
@@ -165,3 +164,4 @@ function girar() {
 
 </body>
 </html>
+
