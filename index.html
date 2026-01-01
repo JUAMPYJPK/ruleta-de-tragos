@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ruleta de Tragos 🍹</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle, #111, #000);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .ruleta-container {
+    position: relative;
+    width: 280px;
+    height: 280px;
+  }
+
+  .ruleta {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 6px solid white;
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    background: conic-gradient(
+      #4caf50 0deg 45deg,
+      #ffeb3b 45deg 90deg,
+      #ff9800 90deg 135deg,
+      #f44336 135deg 180deg,
+      #4caf50 180deg 225deg,
+      #ff9800 225deg 270deg,
+      #f44336 270deg 315deg,
+      #ffeb3b 315deg 360deg
+    );
+  }
+
+  .flecha {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 25px solid white;
+  }
+
+  button {
+    margin-top: 25px;
+    padding: 12px 30px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #222;
+    color: white;
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  #resultado {
+    margin-top: 25px;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 240px;
+  }
+
+  .suave { background: #2e7d32; }
+  .media { background: #f9a825; color: #000; }
+  .alta  { background: #c62828; }
+</style>
+</head>
+
+<body>
+
+<h1>🎯 Ruleta de Tragos 🎯</h1>
+
+<div class="ruleta-container">
+  <div class="flecha"></div>
+  <div class="ruleta" id="ruleta"></div>
+</div>
+
+<button onclick="girar()">GIRAR</button>
+
+<div id="resultado">🍹 ¿Listo para girar?</div>
+
+<script>
+const opciones = [
+  { texto: "Shot de bebida blanca 🥃", gravedad: "media" },
+  { texto: "Trago a elección 🍹", gravedad: "media" },
+  { texto: "Vodka 🧊", gravedad: "media" },
+  { texto: "Fondo blanco 😵", gravedad: "alta" },
+  { texto: "Pasa el turno 😎", gravedad: "suave" },
+  { texto: "Toma el de la izquierda 👈", gravedad: "media" },
+  { texto: "Doble shot 💀", gravedad: "alta" },
+  { texto: "Elige a alguien 🍻", gravedad: "suave" }
+];
+
+let rotacionActual = 0;
+
+function girar() {
+  const ruleta = document.getElementById("ruleta");
+  const resultado = document.getElementById("resultado");
+
+  const giro = Math.floor(Math.random() * 360) + 720;
+  rotacionActual += giro;
+
+  ruleta.style.transform = `rotate(${rotacionActual}deg)`;
+
+  resultado.className = "";
+  resultado.innerHTML = "🎲 Girando...";
+
+  setTimeout(() => {
+    const grados = rotacionActual % 360;
+    const sector = Math.floor((360 - grados) / (360 / opciones.length)) % opciones.length;
+    const opcion = opciones[sector];
+
+    resultado.className = opcion.gravedad;
+    resultado.innerHTML = opcion.texto;
+  }, 4000);
+}
+</script>
+
+</body>
+</html>
