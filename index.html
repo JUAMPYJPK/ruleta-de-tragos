@@ -8,50 +8,58 @@
 <style>
 body {
   margin: 0;
-  height: 100vh;
+  min-height: 100vh;
   background: radial-gradient(circle, #111, #000);
   color: white;
   font-family: Arial, sans-serif;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-h1 { margin-bottom: 20px; }
+.app {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
 
 .ruleta-container {
   position: relative;
-  width: 380px;
-  height: 380px;
+  width: 360px;
+  height: 360px;
 }
 
 .ruleta {
-  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   border: 6px solid white;
   transition: transform 7s cubic-bezier(0.12, 0.8, 0.15, 1);
   background: conic-gradient(
-    #ffeb3b 0deg 45deg,
+    #f9a825 0deg 45deg,
     #ff9800 45deg 90deg,
     #ffc107 90deg 135deg,
-    #f44336 135deg 180deg,
-    #4caf50 180deg 225deg,
+    #c62828 135deg 180deg,
+    #2e7d32 180deg 225deg,
     #ff9800 225deg 270deg,
-    #c62828 270deg 315deg,
-    #66bb6a 315deg 360deg
+    #b71c1c 270deg 315deg,
+    #388e3c 315deg 360deg
   );
 }
 
-.label {
+.numero {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 110px;
-  text-align: center;
-  font-size: 14px;
+  font-size: 22px;
   font-weight: bold;
   transform-origin: center left;
   pointer-events: none;
@@ -69,9 +77,33 @@ h1 { margin-bottom: 20px; }
   border-bottom: 26px solid white;
 }
 
+.referencia {
+  background: rgba(0,0,0,0.5);
+  border-radius: 12px;
+  padding: 15px 20px;
+  min-width: 260px;
+}
+
+.referencia h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.referencia ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.referencia li {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
 button {
-  margin-top: 25px;
-  padding: 12px 30px;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
   font-size: 18px;
   border-radius: 8px;
   border: none;
@@ -81,65 +113,78 @@ button {
 }
 
 #resultado {
-  margin-top: 25px;
-  font-size: 22px;
-  font-weight: bold;
-  padding: 12px 20px;
-  border-radius: 10px;
-  min-width: 260px;
+  margin-top: 15px;
   text-align: center;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.suave { background: #2e7d32; }
-.media { background: #f9a825; color: #000; }
-.alta  { background: #c62828; }
+@media (max-width: 700px) {
+  .app {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<h1>🎯 Ruleta de Tragos 🎯</h1>
+<div class="app">
+  <h1>🎯 Ruleta de Tragos 🎯</h1>
 
-<div class="ruleta-container">
-  <div class="flecha"></div>
-  <div class="ruleta" id="ruleta"></div>
+  <div>
+    <div class="ruleta-container">
+      <div class="flecha"></div>
+      <div class="ruleta" id="ruleta"></div>
+    </div>
+
+    <button onclick="girar()">GIRAR</button>
+    <div id="resultado">🍹 ¿Quién arranca?</div>
+  </div>
+
+  <div class="referencia">
+    <h3>📋 Referencia</h3>
+    <ul id="lista"></ul>
+  </div>
 </div>
-
-<button onclick="girar()">GIRAR</button>
-<div id="resultado">🍹 ¿Quién arranca?</div>
 
 <script>
 const opciones = [
-  { texto: "Shot bebida blanca 🥃", gravedad: "media" },
-  { texto: "Trago a elección 🍹", gravedad: "media" },
-  { texto: "Vodka 🧊", gravedad: "media" },
-  { texto: "Fondo blanco 😵", gravedad: "alta" },
-  { texto: "Pasa el turno 😎", gravedad: "suave" },
-  { texto: "Toma izquierda 👈", gravedad: "media" },
-  { texto: "Doble shot 💀", gravedad: "alta" },
-  { texto: "Elige alguien 🍻", gravedad: "suave" }
+  "Shot de bebida blanca 🥃",
+  "Trago a elección 🍹",
+  "Vodka 🧊",
+  "Fondo blanco 😵",
+  "Pasa el turno 😎",
+  "Toma el de la izquierda 👈",
+  "Doble shot 💀",
+  "Elige a alguien 🍻"
 ];
 
 const ruleta = document.getElementById("ruleta");
+const lista = document.getElementById("lista");
 const resultado = document.getElementById("resultado");
+
 const total = opciones.length;
 const angulo = 360 / total;
 let rotacionActual = 0;
 
-// Crear etiquetas RADIALES (de afuera hacia el centro)
+// Crear números en la ruleta
 opciones.forEach((op, i) => {
-  const label = document.createElement("div");
-  label.className = "label";
+  const num = document.createElement("div");
+  num.className = "numero";
 
-  const rotacion = i * angulo + angulo / 2;
-
-  label.style.transform = `
-    rotate(${rotacion}deg)
-    translate(-170px)
+  const rot = i * angulo + angulo / 2;
+  num.style.transform = `
+    rotate(${rot}deg)
+    translate(-150px)
   `;
 
-  label.innerText = op.texto;
-  ruleta.appendChild(label);
+  num.innerText = i + 1;
+  ruleta.appendChild(num);
+
+  const li = document.createElement("li");
+  li.innerText = `${i + 1}: ${op}`;
+  lista.appendChild(li);
 });
 
 function girar() {
@@ -149,19 +194,17 @@ function girar() {
   rotacionActual += vueltas * 360 + gradosExtra;
   ruleta.style.transform = `rotate(${rotacionActual}deg)`;
 
-  resultado.className = "";
   resultado.innerHTML = "🎲 Girando...";
 
   setTimeout(() => {
     const grados = rotacionActual % 360;
     const index = Math.floor((360 - grados) / angulo) % total;
-    const opcion = opciones[index];
 
-    resultado.className = opcion.gravedad;
-    resultado.innerHTML = opcion.texto;
+    resultado.innerHTML = `🎯 Salió <strong>${index + 1}</strong> → ${opciones[index]}`;
   }, 7000);
 }
 </script>
 
 </body>
 </html>
+
