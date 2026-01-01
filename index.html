@@ -32,8 +32,8 @@ h1 {
 
 .ruleta-container {
   position: relative;
-  width: 360px;
-  height: 360px;
+  width: 380px;
+  height: 380px;
 }
 
 .ruleta {
@@ -41,16 +41,16 @@ h1 {
   height: 100%;
   border-radius: 50%;
   border: 6px solid white;
-  transition: transform 7s cubic-bezier(0.12, 0.8, 0.15, 1);
+  transition: transform 6s cubic-bezier(0.12, 0.8, 0.15, 1);
   background: conic-gradient(
-    #f9a825 0deg 45deg,
+    #4caf50 0deg 45deg,
     #ff9800 45deg 90deg,
     #ffc107 90deg 135deg,
-    #c62828 135deg 180deg,
-    #2e7d32 180deg 225deg,
+    #f44336 135deg 180deg,
+    #2196f3 180deg 225deg,
     #ff9800 225deg 270deg,
-    #b71c1c 270deg 315deg,
-    #388e3c 315deg 360deg
+    #9c27b0 270deg 315deg,
+    #795548 315deg 360deg
   );
 }
 
@@ -66,14 +66,14 @@ h1 {
 
 .flecha {
   position: absolute;
-  top: -22px;
+  top: -24px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 16px solid transparent;
   border-right: 16px solid transparent;
-  border-bottom: 26px solid white;
+  border-bottom: 28px solid white;
 }
 
 .referencia {
@@ -155,11 +155,11 @@ const total = opciones.length;
 const angulo = 360 / total;
 let rotacionActual = 0;
 
-// Números y referencia
+// Crear números y referencia
 opciones.forEach((op, i) => {
   const num = document.createElement("div");
   num.className = "numero";
-  num.style.transform = `rotate(${i * angulo + angulo / 2}deg) translate(-150px)`;
+  num.style.transform = `rotate(${i * angulo + angulo / 2}deg) translate(-160px)`;
   num.innerText = i + 1;
   ruleta.appendChild(num);
 
@@ -169,24 +169,21 @@ opciones.forEach((op, i) => {
 });
 
 function girar() {
-  const vueltas = Math.floor(Math.random() * 4) + 7;
-  const gradosExtra = Math.floor(Math.random() * 360);
+  const indexGanador = Math.floor(Math.random() * total);
 
-  rotacionActual += vueltas * 360 + gradosExtra;
+  const vueltas = Math.floor(Math.random() * 4) + 6;
+  const anguloObjetivo =
+    270 - (indexGanador * angulo + angulo / 2);
+
+  rotacionActual += vueltas * 360 + anguloObjetivo;
   ruleta.style.transform = `rotate(${rotacionActual}deg)`;
 
   resultado.innerHTML = "🎲 Girando...";
 
   setTimeout(() => {
-    const gradosFinales = (rotacionActual % 360 + 360) % 360;
-
-    // ✅ FÓRMULA CORRECTA DEFINITIVA
-    const index = Math.floor(
-      ((360 - (gradosFinales + 90)) % 360) / angulo
-    );
-
-    resultado.innerHTML = `🎯 Salió <strong>${index + 1}</strong> → ${opciones[index]}`;
-  }, 7000);
+    resultado.innerHTML =
+      `🎯 Salió <strong>${indexGanador + 1}</strong> → ${opciones[indexGanador]}`;
+  }, 6000);
 }
 </script>
 
