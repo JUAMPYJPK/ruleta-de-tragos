@@ -95,6 +95,11 @@ button {
   color: white;
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 #resultado {
   margin-top: 15px;
   text-align: center;
@@ -115,7 +120,7 @@ button {
       <div class="ruleta" id="ruleta"></div>
     </div>
 
-    <button onclick="girar()">GIRAR</button>
+    <button id="btnGirar" onclick="girar()">GIRAR</button>
     <div id="resultado">🍹 ¿Quién arranca?</div>
   </div>
 
@@ -140,6 +145,9 @@ const opciones = [
 const ruleta = document.getElementById("ruleta");
 const lista = document.getElementById("lista");
 const resultado = document.getElementById("resultado");
+const btn = document.getElementById("btnGirar");
+
+let rotacionActual = 0;
 
 // Cargar lista de prendas
 opciones.forEach(op => {
@@ -149,18 +157,21 @@ opciones.forEach(op => {
 });
 
 function girar() {
+  btn.disabled = true;
+
   const vueltas = Math.floor(Math.random() * 4) + 6;
   const gradosExtra = Math.floor(Math.random() * 360);
   const index = Math.floor(Math.random() * opciones.length);
 
-  ruleta.style.transform =
-    `rotate(${vueltas * 360 + gradosExtra}deg)`;
+  rotacionActual += vueltas * 360 + gradosExtra;
 
+  ruleta.style.transform = `rotate(${rotacionActual}deg)`;
   resultado.textContent = "🎲 Girando...";
 
   setTimeout(() => {
     resultado.innerHTML =
       `🎯 Prenda: <strong>${opciones[index]}</strong>`;
+    btn.disabled = false;
   }, 6000);
 }
 </script>
