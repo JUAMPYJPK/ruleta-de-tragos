@@ -141,21 +141,27 @@ const ruleta = document.getElementById("ruleta");
 const lista = document.getElementById("lista");
 const resultado = document.getElementById("resultado");
 
-// Cargar lista de prendas (sin números)
+// Cargar lista de prendas
 opciones.forEach(op => {
   const li = document.createElement("li");
-  li.innerText = op;
+  li.textContent = op;
   lista.appendChild(li);
 });
 
 function girar() {
   const vueltas = Math.floor(Math.random() * 4) + 6;
   const gradosExtra = Math.floor(Math.random() * 360);
+  const index = Math.floor(Math.random() * opciones.length);
 
   ruleta.style.transform =
     `rotate(${vueltas * 360 + gradosExtra}deg)`;
 
-  resultado.innerHTML = "🎲 Girando...";
+  resultado.textContent = "🎲 Girando...";
+
+  setTimeout(() => {
+    resultado.innerHTML =
+      `🎯 Prenda: <strong>${opciones[index]}</strong>`;
+  }, 6000);
 }
 </script>
 
