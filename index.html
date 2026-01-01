@@ -42,7 +42,6 @@ h1 {
   border-radius: 50%;
   border: 6px solid white;
   transition: transform 6s cubic-bezier(0.15, 0.85, 0.25, 1);
-  transform: rotate(0deg);
   background: conic-gradient(
     #4caf50 0deg 45deg,
     #ff9800 45deg 90deg,
@@ -53,16 +52,6 @@ h1 {
     #9c27b0 270deg 315deg,
     #795548 315deg 360deg
   );
-}
-
-.numero {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  font-size: 22px;
-  font-weight: bold;
-  transform-origin: center left;
-  pointer-events: none;
 }
 
 .flecha {
@@ -85,8 +74,8 @@ h1 {
 }
 
 .referencia ul {
-  list-style: none;
-  padding: 0;
+  list-style: disc;
+  padding-left: 20px;
   margin: 0;
 }
 
@@ -131,7 +120,7 @@ button {
   </div>
 
   <div class="referencia">
-    <h3>📋 Referencia</h3>
+    <h3>🍻 Prendas</h3>
     <ul id="lista"></ul>
   </div>
 </div>
@@ -152,41 +141,21 @@ const ruleta = document.getElementById("ruleta");
 const lista = document.getElementById("lista");
 const resultado = document.getElementById("resultado");
 
-const total = opciones.length;
-const angulo = 360 / total;
-
-// Crear números y referencia
-opciones.forEach((op, i) => {
-  const num = document.createElement("div");
-  num.className = "numero";
-  num.style.transform =
-    `rotate(${i * angulo + angulo / 2}deg) translate(-160px)`;
-  num.innerText = i + 1;
-  ruleta.appendChild(num);
-
+// Cargar lista de prendas (sin números)
+opciones.forEach(op => {
   const li = document.createElement("li");
-  li.innerText = `${i + 1}: ${op}`;
+  li.innerText = op;
   lista.appendChild(li);
 });
 
 function girar() {
-  const index = Math.floor(Math.random() * total);
   const vueltas = Math.floor(Math.random() * 4) + 6;
+  const gradosExtra = Math.floor(Math.random() * 360);
 
-  // Centro exacto del sector ganador
-  const anguloGanador = index * angulo + angulo / 2;
-
-  // Flecha está arriba (270°)
-  const rotacionFinal = vueltas * 360 + (270 - anguloGanador);
-
-  ruleta.style.transform = `rotate(${rotacionFinal}deg)`;
+  ruleta.style.transform =
+    `rotate(${vueltas * 360 + gradosExtra}deg)`;
 
   resultado.innerHTML = "🎲 Girando...";
-
-  setTimeout(() => {
-    resultado.innerHTML =
-      `🎯 Salió <strong>${index + 1}</strong> → ${opciones[index]}`;
-  }, 6000);
 }
 </script>
 
