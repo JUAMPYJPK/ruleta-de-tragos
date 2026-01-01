@@ -168,17 +168,13 @@ const total = opciones.length;
 const angulo = 360 / total;
 let rotacionActual = 0;
 
-// Crear números en la ruleta
+// Crear números en la ruleta + referencia
 opciones.forEach((op, i) => {
   const num = document.createElement("div");
   num.className = "numero";
 
   const rot = i * angulo + angulo / 2;
-  num.style.transform = `
-    rotate(${rot}deg)
-    translate(-150px)
-  `;
-
+  num.style.transform = `rotate(${rot}deg) translate(-150px)`;
   num.innerText = i + 1;
   ruleta.appendChild(num);
 
@@ -197,8 +193,9 @@ function girar() {
   resultado.innerHTML = "🎲 Girando...";
 
   setTimeout(() => {
-    const grados = rotacionActual % 360;
-    const index = Math.floor((360 - grados) / angulo) % total;
+    // ✅ CÁLCULO CORRECTO Y DEFINITIVO
+    const gradosFinales = (rotacionActual % 360 + 360) % 360;
+    const index = Math.floor(gradosFinales / angulo);
 
     resultado.innerHTML = `🎯 Salió <strong>${index + 1}</strong> → ${opciones[index]}`;
   }, 7000);
@@ -207,4 +204,5 @@ function girar() {
 
 </body>
 </html>
+
 
