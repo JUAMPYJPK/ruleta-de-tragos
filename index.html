@@ -6,86 +6,94 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle, #111, #000);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle, #111, #000);
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
-  h1 {
-    margin-bottom: 20px;
-  }
+h1 {
+  margin-bottom: 20px;
+}
 
-  .ruleta-container {
-    position: relative;
-    width: 280px;
-    height: 280px;
-  }
+.ruleta-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
 
-  .ruleta {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 6px solid white;
-    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-    background: conic-gradient(
-      #4caf50 0deg 45deg,
-      #ffeb3b 45deg 90deg,
-      #ff9800 90deg 135deg,
-      #f44336 135deg 180deg,
-      #4caf50 180deg 225deg,
-      #ff9800 225deg 270deg,
-      #f44336 270deg 315deg,
-      #ffeb3b 315deg 360deg
-    );
-  }
+.ruleta {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid white;
+  transition: transform 6s cubic-bezier(0.1, 0.7, 0.1, 1);
+  overflow: hidden;
+}
 
-  .flecha {
-    position: absolute;
-    top: -18px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-bottom: 25px solid white;
-  }
+.sector {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0% 0%;
+}
 
-  button {
-    margin-top: 25px;
-    padding: 12px 30px;
-    font-size: 18px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: #222;
-    color: white;
-  }
+.sector span {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform-origin: left center;
+  transform: rotate(0deg);
+  font-size: 13px;
+  white-space: nowrap;
+}
 
-  button:active {
-    transform: scale(0.95);
-  }
+.flecha {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 25px solid white;
+}
 
-  #resultado {
-    margin-top: 25px;
-    font-size: 22px;
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 10px;
-    text-align: center;
-    min-width: 240px;
-  }
+button {
+  margin-top: 25px;
+  padding: 12px 30px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #222;
+  color: white;
+}
 
-  .suave { background: #2e7d32; }
-  .media { background: #f9a825; color: #000; }
-  .alta  { background: #c62828; }
+#resultado {
+  margin-top: 25px;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 10px;
+  min-width: 250px;
+  text-align: center;
+}
+
+.suave { background: #2e7d32; }
+.media { background: #f9a825; color: #000; }
+.alta  { background: #c62828; }
+
 </style>
 </head>
 
@@ -99,30 +107,47 @@
 </div>
 
 <button onclick="girar()">GIRAR</button>
-
-<div id="resultado">🍹 ¿Listo para girar?</div>
+<div id="resultado">🍹 ¿Quién se la banca?</div>
 
 <script>
 const opciones = [
-  { texto: "Shot de bebida blanca 🥃", gravedad: "media" },
-  { texto: "Trago a elección 🍹", gravedad: "media" },
-  { texto: "Vodka 🧊", gravedad: "media" },
-  { texto: "Fondo blanco 😵", gravedad: "alta" },
-  { texto: "Pasa el turno 😎", gravedad: "suave" },
-  { texto: "Toma el de la izquierda 👈", gravedad: "media" },
-  { texto: "Doble shot 💀", gravedad: "alta" },
-  { texto: "Elige a alguien 🍻", gravedad: "suave" }
+  { texto: "Shot bebida blanca 🥃", gravedad: "media", color: "#ffeb3b" },
+  { texto: "Trago a elección 🍹", gravedad: "media", color: "#ff9800" },
+  { texto: "Vodka 🧊", gravedad: "media", color: "#ffc107" },
+  { texto: "Fondo blanco 😵", gravedad: "alta", color: "#f44336" },
+  { texto: "Pasa el turno 😎", gravedad: "suave", color: "#4caf50" },
+  { texto: "Toma izquierda 👈", gravedad: "media", color: "#ff9800" },
+  { texto: "Doble shot 💀", gravedad: "alta", color: "#c62828" },
+  { texto: "Elige alguien 🍻", gravedad: "suave", color: "#66bb6a" }
 ];
 
+const ruleta = document.getElementById("ruleta");
+const resultado = document.getElementById("resultado");
+const total = opciones.length;
+const angulo = 360 / total;
 let rotacionActual = 0;
 
+// Crear sectores con texto
+opciones.forEach((op, i) => {
+  const sector = document.createElement("div");
+  sector.className = "sector";
+  sector.style.transform = `rotate(${i * angulo}deg)`;
+  sector.style.background = op.color;
+  sector.style.clipPath = "polygon(0 0, 100% 0, 0 100%)";
+
+  const texto = document.createElement("span");
+  texto.innerText = op.texto;
+  texto.style.transform = `rotate(${angulo / 2}deg) translateX(10px)`;
+
+  sector.appendChild(texto);
+  ruleta.appendChild(sector);
+});
+
 function girar() {
-  const ruleta = document.getElementById("ruleta");
-  const resultado = document.getElementById("resultado");
+  const vueltas = Math.floor(Math.random() * 4) + 6; // 6 a 9 vueltas
+  const gradosExtra = Math.floor(Math.random() * 360);
 
-  const giro = Math.floor(Math.random() * 360) + 720;
-  rotacionActual += giro;
-
+  rotacionActual += vueltas * 360 + gradosExtra;
   ruleta.style.transform = `rotate(${rotacionActual}deg)`;
 
   resultado.className = "";
@@ -130,12 +155,12 @@ function girar() {
 
   setTimeout(() => {
     const grados = rotacionActual % 360;
-    const sector = Math.floor((360 - grados) / (360 / opciones.length)) % opciones.length;
-    const opcion = opciones[sector];
+    const index = Math.floor((360 - grados) / angulo) % total;
+    const opcion = opciones[index];
 
     resultado.className = opcion.gravedad;
     resultado.innerHTML = opcion.texto;
-  }, 4000);
+  }, 6000);
 }
 </script>
 
